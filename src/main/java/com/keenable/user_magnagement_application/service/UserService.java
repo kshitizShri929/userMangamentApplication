@@ -619,20 +619,40 @@ public class UserService {
         return userRepo.save(existingUser);
     }
 
-    // Delete a user by username
+    // // Delete a user by username
+    // public boolean deleteUserByUsername(String username) {
+    //     Optional<UserEntity> userOpt = userRepo.findByUserName(username);
+    //     if (userOpt.isPresent()) {
+    //         userRepo.delete(userOpt.get());
+    //         return true;
+    //     } else {
+    //         return false;
+    //     }
+    // }
+
+    // // Delete all users
+    // public void deleteAllUsers() {
+    //     userRepo.deleteAll();
+    // }
+
+
     public boolean deleteUserByUsername(String username) {
-        Optional<UserEntity> userOpt = userRepo.findByUserName(username);
-        if (userOpt.isPresent()) {
-            userRepo.delete(userOpt.get());
+        Optional<UserEntity> userOptional = userRepo.findByUserNameAndDeletedFalse(username);
+        if (userOptional.isPresent()) {
+            UserEntity user = userOptional.get();
+            user.setDeleted(true);
+            userRepo.save(user);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
-    // Delete all users
     public void deleteAllUsers() {
-        userRepo.deleteAll();
+        List<UserEntity> users = userRepo.findByDeletedFalse();
+        users.forEach(user -> {
+            user.setDeleted(true);
+            userRepo.save(user);
+        });
     }
 
     // Retrieve a username using encrypted password
