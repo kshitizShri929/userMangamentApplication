@@ -23,6 +23,7 @@ public class UserEntity {
     private String role;
     @JsonFormat(shape = JsonFormat.Shape.NUMBER, pattern = "0.0####################") //for Ignore E notettion
     private Double salary;
+    //private String salary;
     private Long phoneNumber;
     @JsonIgnore
     private Boolean deleted =false;
